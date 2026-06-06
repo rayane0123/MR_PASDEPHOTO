@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription | MR Pas De Photos</title>
+  <link rel="stylesheet" href="../style/style.css">
+</head>
+<body style="background: linear-gradient(135deg, #050505 0%, #0a0a0a 100%); min-height: 100vh;">
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <div class="brand-mark">MR</div>
+      <span>MR Pas De Photos</span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="reservation.html">Réserver</a>
+      <a href="apropos.html">À propos</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-wrapper" style="padding: 80px 20px;">
+      <div class="auth-card">
+        <h1>Créer un compte</h1>
+        <p class="sub">Inscription gratuite en moins d'une minute</p>
+        <form onsubmit="event.preventDefault(); register();">
+          <div class="auth-field">
+            <label>Nom complet</label>
+            <input type="text" id="reg_nom" required placeholder="Prénom Nom">
+          </div>
+          <div class="auth-field">
+            <label>Adresse email</label>
+            <input type="email" id="reg_email" required placeholder="votre@email.com">
+          </div>
+          <div class="auth-field">
+            <label>Numéro de téléphone</label>
+            <input type="tel" id="reg_tel" required placeholder="+212 5XX XXX XXX">
+          </div>
+          <div class="auth-field">
+            <label>Mot de passe</label>
+            <input type="password" id="reg_password" required placeholder="Minimum 6 caractères">
+          </div>
+          <button type="submit" class="auth-btn">S'inscrire</button>
+        </form>
+        <div class="auth-footer">
+          Vous avez déjà un compte ? <a href="connexion.html">Se connecter</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="margin-top: 0;">
+    <p>© 2026 MR Pas De Photos — Service professionnel de confidentialité événementielle</p>
+  </footer>
+
+  <script src="../javascript/script.js"></script>
+  <script>
+    // Override de la fonction register pour rediriger correctement
+    function register() {
+      const nom = document.getElementById("reg_nom")?.value.trim();
+      const email = document.getElementById("reg_email")?.value.trim().toLowerCase();
+      const tel = document.getElementById("reg_tel")?.value.trim();
+      const password = document.getElementById("reg_password")?.value;
+
+      if (!nom || !email || !tel || !password) {
+        return showToast("Tous les champs sont requis", true);
+      }
+      if (!email.includes("@") || !email.includes(".")) {
+        return showToast("Email invalide", true);
+      }
+      if (password.length < 6) {
+        return showToast("Le mot de passe doit contenir au moins 6 caractères", true);
+      }
+
+      const users = getStorage("mrpd_users", []);
+      if (users.find(u => u.email === email)) {
+        return showToast("Cet email est déjà utilisé", true);
+      }
+
+      const newUser = {
+        id: Date.now().toString(),
+        nom,
+        email,
+        tel,
+        password,
+        role: "client",
+        createdAt: new Date().toLocaleString("fr-FR")
+      };
+      users.push(newUser);
+      setStorage("mrpd_users", users);
+      showToast("✅ Compte créé avec succès ! Redirection...");
+      setTimeout(() => {
+        window.location.href = "connexion.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

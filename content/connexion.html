@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion | MR Pas De Photos</title>
+  <link rel="stylesheet" href="../style/style.css">
+</head>
+<body style="background: linear-gradient(135deg, #050505 0%, #0a0a0a 100%); min-height: 100vh;">
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <div class="brand-mark">MR</div>
+      <span>MR Pas De Photos</span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="reservation.html">Réserver</a>
+      <a href="apropos.html">À propos</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-wrapper" style="padding: 80px 20px;">
+      <div class="auth-card">
+        <h1>Connexion</h1>
+        <p class="sub">Accédez à votre espace personnel sécurisé</p>
+        <form onsubmit="event.preventDefault(); login();">
+          <div class="auth-field">
+            <label>Adresse email</label>
+            <input type="email" id="login_email" required placeholder="votre@email.com">
+          </div>
+          <div class="auth-field">
+            <label>Mot de passe</label>
+            <input type="password" id="login_password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="auth-btn">Se connecter</button>
+        </form>
+        <div class="auth-footer">
+          Pas encore de compte ? <a href="inscription.html">Créer un compte gratuit</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="margin-top: 0;">
+    <p>© 2026 MR Pas De Photos — Service professionnel de confidentialité événementielle</p>
+  </footer>
+
+  <script src="../javascript/script.js"></script>
+  <script>
+    // Override de la fonction login pour rediriger correctement
+    function login() {
+      const email = document.getElementById("login_email")?.value.trim().toLowerCase();
+      const password = document.getElementById("login_password")?.value;
+
+      if (!email || !password) {
+        return showToast("Veuillez remplir tous les champs", true);
+      }
+
+      const users = getStorage("mrpd_users", []);
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (!user) {
+        return showToast("Email ou mot de passe incorrect", true);
+      }
+
+      setStorage("mrpd_session", {
+        id: user.id,
+        nom: user.nom,
+        email: user.email,
+        tel: user.tel,
+        role: user.role
+      });
+      showToast(`✅ Bienvenue ${user.nom} !`);
+      
+      setTimeout(() => {
+        window.location.href = "../mon-compte.html";
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
